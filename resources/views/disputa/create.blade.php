@@ -22,11 +22,11 @@
         </div>
         <div class="form-group">
             <label for="preco"><span style="color:red">*</span>Preço:</label>
-            <input type="text" class="form-control" name="preco" />
+            <input type="text" class="form-control" name="preco" placeholder="Ex: 2.5"/>
         </div>
         <div class="form-group">
             <label for="preco"><span style="color:red">*</span>Preço Concorrente:</label>
-            <input type="text" class="form-control" name="preco_concorrente" />
+            <input type="text" class="form-control" name="preco_concorrente" placeholder="Ex: 2.5" />
         </div>
         <div class="form-group">
             <label for="vitoria">Vitória:</label>

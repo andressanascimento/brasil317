@@ -25,8 +25,8 @@ class DisputaRequest extends FormRequest
     {
         return [
             'produto_id' => ['required'],
-            'preco' => ['required'],
-            'preco_concorrente' => ['required'],
+            'preco' => ['required','regex:/^\d*(\.\d{1,2})?$/','min:1','max:8'],
+            'preco_concorrente' => ['required','regex:/^\d*(\.\d{1,2})?$/','min:1','max:8'],
             'status' => ['required'],
 
         ];
