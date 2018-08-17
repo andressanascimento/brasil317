@@ -6,9 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Produto;
 use App\Models\Disputa;
 use App\Http\Requests\DisputaRequest;
+use App\Repositories\DisputaRepository;
 
 class DisputaController extends Controller
 {
+
+    private $_repository;
+
+    public function __construct()
+    {
+        $this->_repository = new DisputaRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +25,7 @@ class DisputaController extends Controller
      */
     public function index()
     {
-        $disputas = Disputa::all();
+        $disputas = $this->_repository->all();
         return view('disputa.index', ['disputas' => $disputas]);
     }
 
@@ -39,14 +48,8 @@ class DisputaController extends Controller
      */
     public function store(DisputaRequest $request)
     {
-        Disputa::create([
-            'produto_id' => $request->produto_id,
-            'preco' => $request->preco,
-            'preco_concorrente' => $request->preco_concorrente,
-            'vitoria' => (!empty($request->vitoria)) ? $request->vitoria : null,
-            'status' => $request->status
-        ]);
-
+        $this->_repository->create($request);
+        session()->flash('message','Nova disputa criada!');
         return redirect()->action('DisputaController@index');
     }
 
@@ -58,7 +61,7 @@ class DisputaController extends Controller
      */
     public function show($id)
     {
-        $disputa = Disputa::find($id);
+        $disputa = $this->_repository->find($id);
         return view('disputa.show', ['disputa' => $disputa]);
     }
 
@@ -71,7 +74,7 @@ class DisputaController extends Controller
     public function edit($id)
     {
         $produtos = Produto::pluck('nome','id');
-        $disputa = Disputa::find($id);
+        $disputa = $this->_repository->find($id);
         return view('disputa.edit', [
             'disputa' => $disputa, 
             'produtos' => $produtos
@@ -88,13 +91,8 @@ class DisputaController extends Controller
      */
     public function update(DisputaRequest $request, $id)
     {
-        $disputa = Disputa::find($id);
-        $disputa->produto_id = $request->produto_id;
-        $disputa->preco = $request->preco;
-        $disputa->preco_concorrente = $request->preco_concorrente;
-        $disputa->vitoria = $request->vitoria;
-        $disputa->status = $request->status;
-        $disputa->save();
+        $this->_repository->update($request, $id);
+        session()->flash('message','Atualizado com sucesso');
         return redirect()->route('disputa.index');
     }
 
@@ -106,8 +104,8 @@ class DisputaController extends Controller
      */
     public function destroy($id)
     {
-        $disputa = Disputa::find($id);
-        $disputa->delete();
+        $this->_repository->delete($id);
+        session()->flash('message','O registro foi excluído');
         return redirect()->route('disputa.index');
     }
 }

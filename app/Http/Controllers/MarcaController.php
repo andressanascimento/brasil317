@@ -46,6 +46,7 @@ class MarcaController extends Controller
     public function store(MarcaRequest $request)
     {
         $this->_repository->create($request);
+        session()->flash('message','Nova marca criada!');
         return redirect()->action('MarcaController@index');
     }
 
@@ -81,6 +82,7 @@ class MarcaController extends Controller
     public function update(MarcaRequest $request, $id)
     {
         $this->_repository->update($request, $id);
+        session()->flash('message','Atualizado com sucesso');
         return redirect()->route('marca.index');
     }
 
@@ -93,6 +95,7 @@ class MarcaController extends Controller
     public function destroy($id)
     {
         $this->_repository->delete($id);
+        session()->flash('message','O registro foi excluído');
         return redirect()->route('marca.index');
     }
 }

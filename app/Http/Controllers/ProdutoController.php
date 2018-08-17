@@ -23,7 +23,7 @@ class ProdutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index ()
+    public function index()
     {
         $produtos = $this->_repository->all();
         return view('produto.index', ['produtos' => $produtos]);
@@ -50,7 +50,7 @@ class ProdutoController extends Controller
     public function store(ProdutoRequest $request)
     {
         $this->_repository->create($request);
-
+        session()->flash('message','Novo produto criado!');
         return redirect()->action('ProdutoController@index');
     }
 
@@ -95,6 +95,7 @@ class ProdutoController extends Controller
     public function update(ProdutoRequest $request, $id)
     {
         $this->_repository->update($request, $id);
+        session()->flash('message','Atualizado com sucesso');
         return redirect()->route('produto.index');
     }
 
@@ -107,6 +108,7 @@ class ProdutoController extends Controller
     public function destroy($id)
     {
         $this->_repository->delete($id);
+        session()->flash('message','O registro foi excluído');
         return redirect()->route('produto.index');
     }
 }

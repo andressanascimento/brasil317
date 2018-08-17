@@ -8,7 +8,7 @@ use App\Repositories\DisputaRepository;
 
 class PerformanceController extends Controller
 {
-    protected $_repository;
+    private $_repository;
 
     public function __construct ()
     {
@@ -25,7 +25,7 @@ class PerformanceController extends Controller
     public function performancePorProduto($produto_id)
     {
         $repository = new DisputaRepository();
-        $performances = $this->_repository->performances();
+        $performances = $this->_repository->performancesPorProduto($produto_id);
         return view('performance.produto', ['performances' => $performances]);
     }
 

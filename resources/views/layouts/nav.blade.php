@@ -44,6 +44,7 @@
           </div>
         </nav>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="background: white">
+          @include('layouts.flash_message')
           @yield('content')
         </main>
       </div>

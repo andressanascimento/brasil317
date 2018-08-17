@@ -46,6 +46,7 @@ class FabricanteController extends Controller
     public function store(FabricanteRequest $request)
     {
         $this->_repository->create($request);
+        session()->flash('message','Novo fabricante criado!');
         return redirect()->action('FabricanteController@index');
     }
 
@@ -81,6 +82,7 @@ class FabricanteController extends Controller
     public function update(FabricanteRequest $request, $id)
     {
         $this->_repository->update($request, $id);
+        session()->flash('message','Atualizado com sucesso');
         return redirect()->route('fabricante.index');
     }
 
@@ -93,6 +95,7 @@ class FabricanteController extends Controller
     public function destroy($id)
     {
         $this->_repository->delete($id);
+        session()->flash('message','O registro foi excluído');
         return redirect()->route('fabricante.index');
     }
 }
