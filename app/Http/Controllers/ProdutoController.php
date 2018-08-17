@@ -3,21 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Produto;
+use App\Repositories\ProdutoRepository;
 use App\Models\Marca;
+use App\Models\Produto;
 use App\Models\Fabricante;
 use App\Http\Requests\ProdutoRequest;
 
 class ProdutoController extends Controller
 {
+    private $_repository;
+
+    public function __construct()
+    {
+        $this->_repository = new ProdutoRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index ()
     {
-        $produtos = Produto::all();
+        $produtos = $this->_repository->all();
         return view('produto.index', ['produtos' => $produtos]);
     }
 
@@ -41,11 +49,7 @@ class ProdutoController extends Controller
      */
     public function store(ProdutoRequest $request)
     {
-        Produto::create([
-            'nome' => $request->nome,
-            'marca_id' => $request->marca,
-            'fabricante_id' => $request->fabricante
-        ]);
+        $this->_repository->create($request);
 
         return redirect()->action('ProdutoController@index');
     }
@@ -71,10 +75,13 @@ class ProdutoController extends Controller
     {
         $fabricantes = Fabricante::pluck('nome','id');
         $marcas = Marca::pluck('nome','id');
-        return view('produto.edit', 
-            ['produto' => $produto, 
-            'fabricantes' => $fabricantes, 
-            'marcas' => $marcas]
+        return view(
+            'produto.edit', 
+            [
+                'produto' => $produto, 
+                'fabricantes' => $fabricantes, 
+                'marcas' => $marcas
+            ]
         );
     }
 
@@ -87,11 +94,7 @@ class ProdutoController extends Controller
      */
     public function update(ProdutoRequest $request, $id)
     {
-        $produto = Produto::find($id);
-        $produto->nome = $request->nome;
-        $produto->marca_id = $request->marca;
-        $produto->fabricante_id = $request->fabricante;
-        $produto->save();
+        $this->_repository->update($request, $id);
         return redirect()->route('produto.index');
     }
 
@@ -103,8 +106,7 @@ class ProdutoController extends Controller
      */
     public function destroy($id)
     {
-        $produto = Produto::find($id);
-        $produto->delete();
+        $this->_repository->delete($id);
         return redirect()->route('produto.index');
     }
 }

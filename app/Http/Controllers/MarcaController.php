@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Repositories\MarcaRepository;
 use App\Models\Marca;
 use App\Http\Requests\MarcaRequest;
 
 class MarcaController extends Controller
 {
+    private $_repository;
+
+    public function __construct()
+    {
+        $this->_repository = new MarcaRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +23,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marcas = Marca::all();
+        $marcas = $this->_repository->all();
         return view('marca.index', ['marcas' => $marcas]);
     }
 
@@ -37,9 +45,7 @@ class MarcaController extends Controller
      */
     public function store(MarcaRequest $request)
     {
-        Marca::create([
-            'nome' => $request->nome
-        ]);
+        $this->_repository->create($request);
         return redirect()->action('MarcaController@index');
     }
 
@@ -74,9 +80,7 @@ class MarcaController extends Controller
      */
     public function update(MarcaRequest $request, $id)
     {
-        $marca = Marca::find($id);
-        $marca->nome = $request->nome;
-        $marca->save();
+        $this->_repository->update($request, $id);
         return redirect()->route('marca.index');
     }
 
@@ -88,8 +92,7 @@ class MarcaController extends Controller
      */
     public function destroy($id)
     {
-        $marca = Marca::find($id);
-        $marca->delete();
+        $this->_repository->delete($id);
         return redirect()->route('marca.index');
     }
 }

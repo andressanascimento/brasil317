@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Repositories\FabricanteRepository;
 use App\Models\Fabricante;
 use App\Http\Requests\FabricanteRequest;
 
 class FabricanteController extends Controller
 {
+    private $_repository;
+
+    public function __construct()
+    {
+        $this->_repository = new FabricanteRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +23,7 @@ class FabricanteController extends Controller
      */
     public function index()
     {
-        $fabricantes = Fabricante::all();
+        $fabricantes = $this->_repository->all();
         return view('fabricante.index', ['fabricantes' => $fabricantes]);
     }
 
@@ -37,9 +45,7 @@ class FabricanteController extends Controller
      */
     public function store(FabricanteRequest $request)
     {
-        Fabricante::create([
-            'nome' => $request->nome
-        ]);
+        $this->_repository->create($request);
         return redirect()->action('FabricanteController@index');
     }
 
@@ -74,9 +80,7 @@ class FabricanteController extends Controller
      */
     public function update(FabricanteRequest $request, $id)
     {
-        $fabricante = Fabricante::find($id);
-        $fabricante->nome = $request->nome;
-        $fabricante->save();
+        $this->_repository->update($request, $id);
         return redirect()->route('fabricante.index');
     }
 
@@ -88,8 +92,7 @@ class FabricanteController extends Controller
      */
     public function destroy($id)
     {
-        $fabricante = Fabricante::find($id);
-        $fabricante->delete();
+        $this->_repository->delete($id);
         return redirect()->route('fabricante.index');
     }
 }
